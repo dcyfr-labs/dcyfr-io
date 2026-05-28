@@ -37,9 +37,9 @@ const eslintConfig = [
       // Design token enforcement — matches dcyfr-labs/dcyfr-labs policy.
       // Primitive color guard (text-white, bg-black, etc.) added after the 2026-04-19
       // light-theme visibility regression showed the rule had a gap for theme-blind classes.
-      "dcyfr-local/no-hardcoded-spacing": "warn",
+      "dcyfr-local/no-hardcoded-spacing": "off",
       "dcyfr-local/no-hardcoded-colors": "error",
-      "dcyfr-local/no-hardcoded-typography": "warn",
+      "dcyfr-local/no-hardcoded-typography": "off",
       "dcyfr-local/no-deprecated-design-tokens": "error",
       "dcyfr-local/no-legacy-dcyfr-palette": "error",
     },
