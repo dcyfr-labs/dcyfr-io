@@ -13,7 +13,9 @@ import { test, expect } from '@playwright/test';
  * - `/#products` anchored to product grid (hash scroll is the primary interior affordance)
  *
  * Both captured at desktop (1440×900) and mobile (375×812). Motion paused to
- * avoid flakiness on the Phase-3 chip pulse + card hover transitions.
+ * avoid flakiness on the Phase-3 chip pulse + card hover transitions. The
+ * RSS-driven blog carousel is hidden before capture (see inline note below) so
+ * dcyfr.tech publishing a new article can't drift these baselines.
  */
 
 const VIEWPORTS = [
@@ -43,6 +45,19 @@ for (const route of ROUTES) {
 
       // Let hydration + font-swap + layout settle before snapshot
       await page.waitForTimeout(1500);
+
+      // Exclude the RSS-driven blog carousel from the capture. app/page.tsx
+      // hydrates `section[aria-labelledby="blog-heading"]` (BlogCarousel) from
+      // dcyfr.tech's live feed; its cards have no fixed height, so a new
+      // article changes the section's height and drifts this fullPage snapshot
+      // into a size-mismatch hard-fail. The feed is inherently dynamic — not a
+      // stable visual baseline — so hide it. `display:none` is a no-op when the
+      // feed failed to render (vs `mask:`, which would still leave a
+      // variable-height box). Both `/` and `/#products` render it.
+      await page.addStyleTag({
+        content:
+          'section[aria-labelledby="blog-heading"]{display:none !important}',
+      });
 
       await expect(page).toHaveScreenshot(`${route.name}-${vp.name}.png`, {
         fullPage: true,
