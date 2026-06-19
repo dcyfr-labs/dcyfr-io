@@ -10,6 +10,16 @@ export default defineConfig({
   // (maxDiffPixelRatio: 0.05 in e2e/snapshots.spec.ts) absorbs the
   // per-OS font/anti-aliasing delta. If false positives emerge, switch
   // to a per-OS capture strategy (CI-driven baseline generation).
+  //
+  // IMPORTANT: mobile (375px) baselines MUST be (re)generated on the x86 CI
+  // runner, never locally. At narrow width, text wraps differently between
+  // arm64 (Apple Silicon) and the x86 GitHub runner, shifting the fullPage
+  // height by ~20px — a hard size-mismatch the 5% tolerance cannot absorb.
+  // Procedure: push the change, let this gate fail, download the failed run's
+  // `playwright-report` artifact, and commit its `<name>-actual.png` as the
+  // new `<name>.png` baseline (the artifact is the exact x86 render). Desktop
+  // (1440px) is wide enough that local arm64 captures match CI and may use
+  // `npm run test:snapshots:update`.
   snapshotPathTemplate: '{testDir}/{testFilePath}-snapshots/{arg}{ext}',
   use: {
     baseURL: process.env.BASE_URL ?? 'https://dcyfr.io',
