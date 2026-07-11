@@ -1,0 +1,11 @@
+# DCYFR
+
+> The unified portal for the DCYFR product ecosystem — templates, research, agent tools, and infrastructure solutions built for AI-powered development.
+
+## Pages
+- [Home](https://dcyfr.io/): Portal homepage — the DCYFR product catalog grouped by tier, unified search, and latest research from the DCYFR blog.
+
+## Related sites
+- [DCYFR Templates](https://dcyfr.app/): Next.js starter templates.
+- [DCYFR Research](https://dcyfr.tech/): Research and engineering blog.
+- [DCYFR Codes](https://dcyfr.codes/): Code resources.
