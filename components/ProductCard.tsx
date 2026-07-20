@@ -47,7 +47,7 @@ export function ProductCard({ product, featured = false }: ProductCardProps) {
         'group relative flex flex-col rounded-xl border bg-card/70 p-6',
         'transition-all duration-200',
         product.available
-          ? [borderColor, 'hover:bg-muted/70 hover:shadow-lg']
+          ? [borderColor, 'card-hover']
           : 'border-input/40',
         featured && 'ring-1 ring-secure/20'
       )}
