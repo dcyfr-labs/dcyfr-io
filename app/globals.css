@@ -50,6 +50,12 @@
 
     /* Motion */
     --ease-brand: cubic-bezier(0.22, 1, 0.36, 1);
+
+    /* Card hover microinteraction — scout finding 2026-07-19-dcyfr-io.
+       Subtle lift + accent border shift; resolves against the active
+       --accent (default now, subdued grey-blue once .theme-dcyfr-io lands). */
+    --card-hover-translate: -2px;
+    --card-hover-border: hsl(var(--accent) / 0.5);
   }
 
   .dark {
@@ -92,6 +98,21 @@
     --radius: 0.375rem;
     --accent: 215 20% 65%;
     --accent-foreground: 215 28% 17%;
+  }
+}
+
+@layer components {
+  /*
+   * Card hover microinteraction — scout finding 2026-07-19-dcyfr-io.
+   * Portal archetype: motion limited to hover — a low-magnitude translateY
+   * lift + border-color shift toward the subdued accent, replacing the
+   * soft-shadow hover. No background or scale animation. Animated via the
+   * card's existing `transition-all` utility; the global reduced-motion
+   * rule below neutralizes it.
+   */
+  .card-hover:hover {
+    transform: translateY(var(--card-hover-translate));
+    border-color: var(--card-hover-border);
   }
 }
 
