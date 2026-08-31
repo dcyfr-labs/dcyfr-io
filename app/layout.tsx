@@ -79,14 +79,12 @@ const FOOTER_COLUMNS = [
       { href: 'mailto:hello@dcyfr.dev', label: 'Contact' },
     ],
   },
-  {
-    title: 'Legal',
-    links: [
-      { href: '/trademark', label: 'Trademark' },
-      { href: '/privacy', label: 'Privacy' },
-      { href: '/terms', label: 'Terms' },
-    ],
-  },
+];
+
+const LEGAL_LINKS = [
+  { href: '/privacy', label: 'Privacy' },
+  { href: 'https://dcyfr.ai/terms', label: 'Terms', external: true },
+  { href: 'https://dcyfr.ai/security', label: 'Security', external: true },
 ];
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -107,6 +105,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                   tagline: 'The control center for AI-powered development',
                 }}
                 columns={FOOTER_COLUMNS}
+                legal={LEGAL_LINKS}
                 copyright="© 2026 DCYFR. All rights reserved."
               />
             }
