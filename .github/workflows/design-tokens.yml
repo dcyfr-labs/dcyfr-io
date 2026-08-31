@@ -2,7 +2,7 @@
 # openspec/specs/dcyfr-site-scaffold (landed via
 # openspec/changes/dcyfr-sites-design-parity Phase 3.9 / 4.1).
 #
-# Three gates, failing independently so feedback stays granular:
+# Four gates, failing independently so feedback stays granular:
 #
 #   1. legacy-palette  — `dcyfr-primary-N` / `dcyfr-accent-N` scaled AND
 #                        unscaled refs. Replaces the narrow grep from the
