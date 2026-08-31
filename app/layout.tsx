@@ -8,11 +8,17 @@ import './globals.css';
 
 const inter = Inter({
   subsets: ['latin'],
-  // NOT --font-sans. v4 emits its default theme as real custom properties, so
-  // `:root { --font-sans: <system stack> }` now exists and ties on specificity
-  // with this class on the same <html>, winning on source order. Naming the
-  // face's own variable keeps next/font out of a Tailwind theme namespace;
-  // globals.css maps --font-sans onto it so the utility still means Inter.
+  // Named for the face, not the role. The theme engine binds <body> and
+  // headings to --font-body / --font-display, and the theme resolves each
+  // through a --font-<role>-loaded hook; globals.css points those hooks and
+  // the `font-sans` utility at this one variable. Naming it for the face means
+  // three roles can share it without any Tailwind theme key pointing at
+  // another, and swapping Inter out later is a one-line change here.
+  //
+  // (v4 also emits its own `--font-sans` default onto this same <html>, but
+  // inside `@layer theme`, and next/font injects this class unlayered —
+  // unlayered beats layered regardless of source order, so there is no
+  // clobber. Verified in the browser rather than reasoned about.)
   variable: '--font-inter',
   display: 'swap',
 });
@@ -54,7 +60,7 @@ export const metadata: Metadata = {
 
 const DcyfrIoLogo = (
   <span className="text-lg font-bold tracking-tight">
-    dcyfr<span className="text-accent">.io</span>
+    dcyfr<span className="text-accent-600">.io</span>
   </span>
 );
 
@@ -96,9 +102,16 @@ const FOOTER_COLUMNS = [
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
+    // data-identity selects the theme package; the .dark class (added by
+    // ThemeProvider) selects the scheme. They are orthogonal by construction —
+    // the theme is scoped [data-identity="slate"] / [data-identity="slate"].dark
+    // — which is what removes the old two-single-classes-tie-on-specificity
+    // clobber described in globals.css. Stamped server-side, so it is present
+    // in the first paint rather than after hydration.
     <html
       lang="en"
       suppressHydrationWarning
+      data-identity="slate"
       className={`${inter.variable} theme-dcyfr-io`}
     >
       <body>

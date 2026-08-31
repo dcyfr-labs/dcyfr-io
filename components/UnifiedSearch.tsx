@@ -106,7 +106,7 @@ export function UnifiedSearch() {
                   <p className="text-sm font-medium text-foreground">&ldquo;{s.label}&rdquo;</p>
                   <p className="text-xs text-muted-foreground">{s.description}</p>
                 </div>
-                <span className="text-xs font-mono text-accent shrink-0 ml-4">
+                <span className="text-xs font-mono text-accent-600 shrink-0 ml-4">
                   {s.tld}
                 </span>
               </a>

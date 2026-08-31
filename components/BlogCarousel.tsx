@@ -41,7 +41,7 @@ export function BlogCarousel({ items }: Readonly<BlogCarouselProps>) {
               className="group rounded-xl border border-input/60 bg-card/60 p-4 hover:border-secure/40 transition-colors"
             >
               {item.category && (
-                <span className="mb-2 block text-xs font-medium text-accent">{item.category}</span>
+                <span className="mb-2 block text-xs font-medium text-accent-600">{item.category}</span>
               )}
               <h3 className="text-sm font-semibold text-foreground group-hover:text-accent-foreground transition-colors leading-snug mb-2">
                 {item.title}
