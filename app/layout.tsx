@@ -8,7 +8,12 @@ import './globals.css';
 
 const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-sans',
+  // NOT --font-sans. v4 emits its default theme as real custom properties, so
+  // `:root { --font-sans: <system stack> }` now exists and ties on specificity
+  // with this class on the same <html>, winning on source order. Naming the
+  // face's own variable keeps next/font out of a Tailwind theme namespace;
+  // globals.css maps --font-sans onto it so the utility still means Inter.
+  variable: '--font-inter',
   display: 'swap',
 });
 

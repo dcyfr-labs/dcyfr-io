@@ -101,7 +101,7 @@ export function ProductCard({ product, featured = false }: ProductCardProps) {
   }
 
   return (
-    <a href={product.url} className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secure rounded-xl">
+    <a href={product.url} className="block focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-secure rounded-xl">
       {cardContent}
     </a>
   );

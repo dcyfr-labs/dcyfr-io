@@ -1,19 +1,119 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@source "../app";
+@source "../components";
+
+/*
+ * next-themes drives the scheme with a class on <html>, not the OS media
+ * query, so the `dark:` variant has to be re-pointed at that class. There are
+ * currently no `dark:` utilities in this tree — the scheme switch runs
+ * entirely through the token blocks below — but leaving the variant on v4's
+ * media-query default would silently mis-target the first one anybody writes.
+ */
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Semantic-var bridge, migrated verbatim out of the deleted tailwind.config.ts.
+ *
+ * The `hsl(var(--x))` wrapper is retained deliberately at this step: the token
+ * blocks below still hold bare HSL triplets, so the wrapper is still the
+ * correct reading of them. Flipping tokens to full color values and the
+ * mapping to plain `var(--x)` is the theme-engine adoption, and it lands as
+ * its own commit so a v4 default-value regression and a token regression can
+ * never arrive in the same diff.
+ */
+@theme inline {
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  /* DCYFR-specific semantic tokens */
+  --color-secure: hsl(var(--secure));
+  --color-secure-foreground: hsl(var(--secure-foreground));
+  --color-success: hsl(var(--success));
+  --color-success-foreground: hsl(var(--success-foreground));
+  --color-warning: hsl(var(--warning));
+  --color-warning-foreground: hsl(var(--warning-foreground));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  /*
+   * next/font loads Inter under --font-inter (see app/layout.tsx for why it is
+   * not named --font-sans). Mapping it here keeps the `font-sans` utility
+   * meaning the site's body face rather than v4's default system stack. The
+   * utility has no call sites today; without this line the first one added
+   * would silently render in the wrong typeface.
+   */
+  --font-sans: var(--font-inter);
+
+  /*
+   * The deleted config also declared transitionTimingFunction.brand, which
+   * generated an `ease-brand` utility. It has zero call sites in this tree, so
+   * it is not carried over. Naming it here would also force --ease-brand to be
+   * renamed everywhere it is authored, since a @theme key and a raw variable of
+   * the same name self-reference.
+   */
+}
+
+/*
+ * v4 changed the default border color from gray-200 to `currentColor`, so
+ * every bare `border` utility in the tree would otherwise start painting the
+ * element's text color. Six call sites rely on that default here, and three of
+ * them live in byte-identical @dcyfr-labs registry copies (dcyfr-card,
+ * dcyfr-badge) that no gate watches for drift — editing those would fork them
+ * invisibly. Restoring the default globally is one rule instead of six edits,
+ * it cannot miss a call site, and it is what shadcn's own v4 migration ships.
+ *
+ * Not a byte-for-byte restoration: v3's default was gray-200 (#e5e7eb) and
+ * --border is slate-200 (#e2e8f0). That one-step difference is a deliberate
+ * correction toward the token the design system actually wants, and it is
+ * enumerated in this commit's expected diff.
+ */
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-border, currentColor);
+  }
+}
 
 /*
  * Phase 1 semantic CSS variable set per
  * openspec/changes/dcyfr-skeleton-sites-scaffolding/spec.md §1.
  *
- * Additive to the legacy tailwind.preset.ts palette — existing dcyfr-primary-*
- * classes keep working through the preset while @dcyfr-labs registry primitives
- * resolve `bg-background`, `text-foreground`, etc. against these vars via
- * tailwind.config.ts colors extension.
+ * The .theme-dcyfr-io block below IS applied to <html> — see app/layout.tsx.
+ * The header here claimed it was "STAGED — not yet applied" from the day it
+ * was written; that claim was false at this site and at dcyfr-tech, so it is
+ * corrected rather than carried forward.
  *
- * The .theme-dcyfr-io identity override block below is STAGED — not yet
- * applied to <html>. Full wiring (activate theme class, add next-themes
- * provider, retire legacy preset) lands as a follow-up.
+ * Note the cascade this produces: `.theme-dcyfr-io` and `.dark` are both
+ * single-class selectors on the same <html> element, so they tie on
+ * specificity and source order decides. The identity block is declared last,
+ * which means its --accent wins in BOTH schemes and the .dark --accent below
+ * never applies. That is load-bearing today — it is the only reason
+ * `text-accent` renders visibly at all — and it is exactly the clobber the
+ * theme engine is being adopted to remove.
  */
 
 @layer base {
@@ -90,7 +190,7 @@
 
   /*
    * Identity layer for dcyfr.io — portal / link hub, minimal.
-   * Staged: apply via <html className="theme-dcyfr-io"> once Phase 2 wiring lands.
+   * Applied at app/layout.tsx via <html className="… theme-dcyfr-io">.
    * Source of truth: docs/dcyfr-workspace/sites/dcyfr-io.md
    */
   .theme-dcyfr-io {
@@ -122,7 +222,7 @@
  * vars above; existing pages read the dcyfr-* palette from tailwind.preset.ts.
  */
 body {
-  font-family: var(--font-sans, ui-sans-serif, system-ui, -apple-system, sans-serif);
+  font-family: var(--font-inter, ui-sans-serif, system-ui, -apple-system, sans-serif);
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
 }

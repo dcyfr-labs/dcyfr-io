@@ -75,7 +75,7 @@ export function UnifiedSearch() {
             className={clsx(
               'w-full rounded-xl border border-input/60 bg-card/60',
               'pl-12 pr-4 py-3.5 text-foreground placeholder:text-muted-foreground',
-              'focus:border-secure/60 focus:outline-none focus:ring-1 focus:ring-secure/40',
+              'focus:border-secure/60 focus:outline-hidden focus:ring-1 focus:ring-secure/40',
               'text-sm'
             )}
             aria-label="Search across DCYFR products"
