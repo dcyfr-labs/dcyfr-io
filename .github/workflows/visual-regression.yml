@@ -28,6 +28,14 @@
 # desktop silently absorbs ~57k pixels of antialiasing noise into the 5%
 # tolerance (measured 2026-08-31 on a build proven pixel-identical to its
 # predecessor). See the capture note in playwright.config.ts.
+#
+# The switch regenerates with `--update-snapshots=all`, deliberately. A bare
+# `--update-snapshots` means `changed`, which rewrites a baseline only when the
+# render FAILED the comparison. Any correction smaller than the 5%
+# maxDiffPixelRatio therefore cannot be recorded at all: the run passes, writes
+# nothing, and the stale PNG survives its own regeneration. Confirmed here on
+# 2026-08-31 — the first dispatch returned baselines byte-identical to the
+# committed ones for a change measured at 0.00114.
 
 name: Visual Regression
 
@@ -167,7 +175,12 @@ jobs:
           UPDATE_BASELINES: ${{ github.event_name == 'workflow_dispatch' && inputs.update_baselines }}
         run: |
           if [ "$UPDATE_BASELINES" = "true" ]; then
-            npm run test:snapshots:update
+            # :rebaseline, not :update. A bare --update-snapshots means
+            # `changed`, which rewrites a PNG only when the render FAILED the
+            # comparison — so any correction smaller than maxDiffPixelRatio
+            # cannot be recorded, and the run reports success having changed
+            # nothing. =all writes unconditionally.
+            npm run test:snapshots:rebaseline
           else
             npm run test:snapshots
           fi
