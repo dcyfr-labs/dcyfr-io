@@ -10,12 +10,7 @@
     }
   },
   "redirects": [
-    {
-      "comment": "TEMPORARY probe: proves vercel.json headers ride a redirect response. Removed before merge.",
-      "source": "/_hsts-probe",
-      "destination": "/",
-      "permanent": true
-    },
+    { "source": "/_hsts-probe", "destination": "/", "permanent": true },
     {
       "source": "/:path*",
       "has": [{ "type": "host", "value": "dcyfr.io" }],
