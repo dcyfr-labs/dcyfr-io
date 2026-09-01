@@ -19,22 +19,28 @@ interface ProductCardProps {
 // by adding visual noise; collapsing to two semantic tokens reads
 // cleaner at scan-glance AND eliminates the 10 hardcoded-color refs
 // this file contributed to the workspace debt ledger.
+//
+// `accent` here means the brand hue, so these read the accent-400..700 ramp
+// rather than the bare `accent` token. Under the theme contract that bare
+// token is a surface tint — near-white in light, near-background navy in dark
+// — and `text-accent` on a card would be all but invisible. The -600 step is
+// the ramp's text-weight anchor in both schemes.
 const tierBorderColors: Record<ProductTier, string> = {
   framework: 'border-primary/40',
-  templates: 'border-accent/30',
-  research: 'border-accent/30',
-  agents: 'border-accent/30',
-  infrastructure: 'border-accent/30',
-  tools: 'border-accent/30',
+  templates: 'border-accent-600/30',
+  research: 'border-accent-600/30',
+  agents: 'border-accent-600/30',
+  infrastructure: 'border-accent-600/30',
+  tools: 'border-accent-600/30',
 };
 
 const tierAccentColors: Record<ProductTier, string> = {
   framework: 'text-primary',
-  templates: 'text-accent',
-  research: 'text-accent',
-  agents: 'text-accent',
-  infrastructure: 'text-accent',
-  tools: 'text-accent',
+  templates: 'text-accent-600',
+  research: 'text-accent-600',
+  agents: 'text-accent-600',
+  infrastructure: 'text-accent-600',
+  tools: 'text-accent-600',
 };
 
 export function ProductCard({ product, featured = false }: ProductCardProps) {
@@ -101,7 +107,7 @@ export function ProductCard({ product, featured = false }: ProductCardProps) {
   }
 
   return (
-    <a href={product.url} className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secure rounded-xl">
+    <a href={product.url} className="block focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-secure rounded-xl">
       {cardContent}
     </a>
   );
