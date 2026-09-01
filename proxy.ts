@@ -2,38 +2,37 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 /**
- * Canonical host redirect, and the reason it lives here rather than in config.
+ * Canonical host redirect, and why it lives in middleware rather than config.
  *
  * The apex serves a redirect to www, and hstspreload.org reads the HSTS header
- * on the redirect response itself, not on the page it lands on. Two earlier
- * homes for that redirect both fail to attach the header:
+ * on the redirect response itself, not on the page it lands on. Two simpler
+ * homes for that redirect were tried first and both fail to attach it:
  *
  * 1. A Vercel project-level domain redirect runs above the app entirely, so no
  *    code in this repo executes and Vercel emits its platform default for
  *    custom domains: `max-age=63072000`, with no `includeSubDomains` and no
  *    `preload`. That is what every dcyfr apex served before this change, and it
- *    is why none of them were preload-eligible.
+ *    is the whole reason none of them are preload-eligible.
  *
  * 2. A `redirects` entry in vercel.json does not inherit the `headers` block.
  *    Measured on a preview deployment of this repo: a 308 produced that way came
- *    back with no Content-Security-Policy and no X-Frame-Options, both of which
- *    were present on a 200 from the same build. Redirects short-circuit ahead of
- *    headers in Vercel's route table.
+ *    back with no Content-Security-Policy and no X-Frame-Options, both present
+ *    on a 200 from the same build. Route-table redirects short-circuit ahead of
+ *    the headers block.
  *
- * Proxy middleware runs before routing and owns its own response, so it is the
- * only place the redirect and the header can be emitted together.
+ * A middleware response is an application response, so the vercel.json headers
+ * do reach it. Measured the same way: the 308 below came back carrying the full
+ * `/(.*)` set. The explicit list is kept anyway so the redirect cannot silently
+ * lose the directive if that block is ever narrowed.
  *
  * This is inert until the project-level domain redirect for the apex is cleared
- * in Vercel. While that redirect exists it wins, and this code never sees the
- * request.
+ * in the Vercel dashboard. While that redirect exists it wins and this code
+ * never sees the request, which is what makes shipping it first the safe order.
  */
 const APEX = 'dcyfr.io';
 const CANONICAL = `www.${APEX}`;
 
-/**
- * Mirrors the `/(.*)` headers block in vercel.json. That block covers rendered
- * responses; this covers the redirect, which never reaches it.
- */
+/** Mirrors the `/(.*)` headers block in vercel.json. */
 const SECURITY_HEADERS: Record<string, string> = {
   'X-Content-Type-Options': 'nosniff',
   'X-Frame-Options': 'DENY',
@@ -46,8 +45,7 @@ const SECURITY_HEADERS: Record<string, string> = {
 export function proxy(request: NextRequest) {
   const host = request.headers.get('host')?.split(':')[0]?.toLowerCase();
 
-  const probing = request.nextUrl.searchParams.has("__hstsprobe"); // TEMPORARY
-  if (host !== APEX && !probing) {
+  if (host !== APEX) {
     return NextResponse.next();
   }
 
