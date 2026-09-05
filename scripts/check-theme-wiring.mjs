@@ -74,6 +74,28 @@ for (const f of [ENGINE, ...themeFiles]) {
   }
 }
 
+/*
+ * The chrome block's utility item is the same failure with a different file.
+ * `dcyfr-chrome-utilities` is a `registry:style`: `shadcn add` writes
+ * app/dcyfr-chrome.css and touches nothing else, so a site can install the v2
+ * chrome, render every component, and never load the three classes those
+ * components position themselves with. Checked here rather than in its own
+ * script because it is check 2 over one more filename.
+ */
+const CHROME = 'dcyfr-chrome.css';
+if (existsSync(join(appDir, CHROME))) {
+  const imported = new RegExp(`@import\\s+["'][^"']*${CHROME.replace('.', '\\.')}["']`).test(
+    globals,
+  );
+  if (!imported) {
+    failures.push(
+      `${CHROME} is installed but globals.css never imports it. It is a ` +
+        'registry:style item, so the import is the only thing that loads it — the ' +
+        'chrome renders with its tap-target and transition classes undefined.',
+    );
+  }
+}
+
 // --- 3. the stamped identity matches a scope a theme file declares ------------
 const layoutPath = ['layout.tsx', 'layout.jsx']
   .map((f) => join(appDir, f))
@@ -136,7 +158,9 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
+const wired = [...themeFiles, ...(existsSync(join(appDir, CHROME)) ? [CHROME] : [])];
+
 console.log(
   `✓ theme wiring intact — data-identity="${stamp}", ` +
-    `packages [${themeFiles.join(', ')}] installed and imported`,
+    `packages [${wired.join(', ')}] installed and imported`,
 );

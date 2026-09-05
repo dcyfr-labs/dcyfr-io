@@ -2,8 +2,10 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import { ThemeProvider } from '@/components/theme-provider';
-import { PageShell, SiteNav, SiteFooter } from '@/components/chrome';
+import { ThemeProvider } from '@/components/chrome/theme-provider';
+import { SiteHeader, type HeaderNavItem } from '@/components/chrome/site-header';
+import { SiteFooter, type FooterLink } from '@/components/chrome/site-footer';
+import type { ChromeNavSection } from '@/components/chrome/nav-utils';
 import './globals.css';
 
 const inter = Inter({
@@ -64,38 +66,69 @@ const DcyfrIoLogo = (
   </span>
 );
 
-const NAV_LINKS = [
+// The v1 nav list, minus nothing (there was no "/" entry) and minus the
+// `external` flag: v2 nav items carry no such flag and every off-site link
+// opens in the same tab.
+const NAV: HeaderNavItem[] = [
   { href: '/#products', label: 'Products' },
-  { href: 'https://dcyfr.app', label: 'Templates', external: true },
-  { href: 'https://dcyfr.tech', label: 'Research', external: true },
-  { href: 'https://dcyfr.codes', label: 'Codes', external: true },
-  { href: 'https://github.com/dcyfr', label: 'GitHub', external: true },
+  { href: 'https://dcyfr.app', label: 'Templates' },
+  { href: 'https://dcyfr.tech', label: 'Research' },
+  { href: 'https://dcyfr.codes', label: 'Codes' },
+  { href: 'https://github.com/dcyfr', label: 'GitHub' },
 ];
 
-const FOOTER_COLUMNS = [
+// The drawer is the only place every link is reachable below `md`: the header
+// link row and the footer link row are both `hidden md:flex`. Ecosystem is the
+// v1 footer's "Products" column, renamed for what it actually lists (sibling
+// sites, not this site's products); the new Products section carries the
+// on-page anchor the header row would otherwise own alone.
+//
+// No item may carry `icon`. This file is a Server Component and SiteHeader is
+// 'use client', so an ElementType cannot cross the boundary.
+const SECTIONS: ChromeNavSection[] = [
   {
-    title: 'Products',
-    links: [
-      { href: 'https://dcyfr.app', label: 'Templates', external: true },
-      { href: 'https://dcyfr.tech', label: 'Research', external: true },
-      { href: 'https://dcyfr.codes', label: 'Codes', external: true },
-      { href: 'https://dcyfr.work', label: 'Work', external: true },
-      { href: 'https://dcyfr.build', label: 'Build', external: true },
+    id: 'products',
+    label: 'Products',
+    items: [{ href: '/#products', label: 'All products' }],
+  },
+  {
+    id: 'ecosystem',
+    label: 'Ecosystem',
+    items: [
+      { href: 'https://dcyfr.app', label: 'Templates' },
+      { href: 'https://dcyfr.tech', label: 'Research' },
+      { href: 'https://dcyfr.codes', label: 'Codes' },
+      { href: 'https://dcyfr.work', label: 'Work' },
+      { href: 'https://dcyfr.build', label: 'Build' },
     ],
   },
   {
-    title: 'Community',
-    links: [
-      { href: 'https://github.com/dcyfr', label: 'GitHub', external: true },
+    id: 'community',
+    label: 'Community',
+    items: [
+      { href: 'https://github.com/dcyfr', label: 'GitHub' },
       { href: 'mailto:hello@dcyfr.dev', label: 'Contact' },
     ],
   },
+  {
+    id: 'legal',
+    label: 'Legal',
+    items: [
+      { href: '/privacy', label: 'Privacy' },
+      { href: 'https://dcyfr.ai/terms', label: 'Terms' },
+      { href: 'https://dcyfr.ai/security', label: 'Security' },
+    ],
+  },
 ];
 
-const LEGAL_LINKS = [
+// Flat, and short by design: the v2 footer link row sits on one line beside the
+// copyright. The five sibling sites live in the drawer's Ecosystem section and
+// in the `#products` grid on the home page.
+const FOOTER: FooterLink[] = [
+  { href: 'mailto:hello@dcyfr.dev', label: 'Contact' },
   { href: '/privacy', label: 'Privacy' },
-  { href: 'https://dcyfr.ai/terms', label: 'Terms', external: true },
-  { href: 'https://dcyfr.ai/security', label: 'Security', external: true },
+  { href: 'https://dcyfr.ai/terms', label: 'Terms' },
+  { href: 'https://dcyfr.ai/security', label: 'Security' },
 ];
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -112,26 +145,26 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       data-identity="slate"
       className={`${inter.variable} theme-dcyfr-io`}
     >
-      <body>
+      <body className="flex min-h-dvh flex-col">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <PageShell
-            nav={<SiteNav logo={DcyfrIoLogo} links={NAV_LINKS} />}
-            footer={
-              <SiteFooter
-                brand={{
-                  name: 'dcyfr.io',
-                  tagline: 'The control center for AI-powered development',
-                }}
-                columns={FOOTER_COLUMNS}
-                legal={LEGAL_LINKS}
-                copyright="© 2026 DCYFR. All rights reserved."
-              />
-            }
-            padding="none"
-            maxWidth="full"
+          {/* focus:z-50 clears the fixed header, which is z-40. */}
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:shadow-lg"
           >
+            Skip to content
+          </a>
+          <SiteHeader
+            logo={DcyfrIoLogo}
+            logoAriaLabel="dcyfr.io home"
+            links={NAV}
+            mobileNavSections={SECTIONS}
+          />
+          {/* pt-18 clears the fixed h-18 header. */}
+          <main id="main-content" className="flex-1 pt-18">
             {children}
-          </PageShell>
+          </main>
+          <SiteFooter brand="DCYFR" links={FOOTER} />
         </ThemeProvider>
         <Analytics />
         <SpeedInsights />

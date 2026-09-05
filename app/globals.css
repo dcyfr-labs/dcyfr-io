@@ -21,6 +21,20 @@
 @import "./dcyfr-theme-engine.css";
 @import "./dcyfr-theme-slate.css";
 
+/*
+ * The five utility classes the v2 chrome block uses and does not define
+ * (`touch-target`, `transition-base`, `transition-fast`, plus the bare
+ * `site-header` / `site-footer` hooks), shipped as its own registry item so
+ * seven sites do not each carry a hand-copied twelve lines:
+ *
+ *   npx shadcn@latest add @dcyfr-labs/dcyfr-chrome-v2
+ *
+ * The item is a `registry:style` — it writes the file and nothing else, so the
+ * import is the only thing wiring it in. Without this line the classes never
+ * load and the header's tap targets silently collapse.
+ */
+@import "./dcyfr-chrome.css";
+
 @source "../app";
 @source "../components";
 
@@ -240,6 +254,16 @@ body {
  * `html { scroll-behavior: smooth }` would survive a reduced-motion
  * preference that the old site-level `*` rule used to override.
  */
+/*
+ * The v2 header is fixed at `h-18` (4.5rem), so an in-page anchor would
+ * otherwise land underneath it. Unguarded on purpose: this is a scroll
+ * destination, not a scroll animation, and it has to hold under a
+ * reduced-motion preference too.
+ */
+html {
+  scroll-padding-top: 4.5rem;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
