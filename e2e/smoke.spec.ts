@@ -15,8 +15,8 @@ test.describe('dcyfr.io smoke tests', () => {
 
     test('product sections render', async ({ page }) => {
       await page.goto(BASE_URL);
-      const main = page.locator('main#products');
-      await expect(main).toBeVisible();
+      const products = page.locator('#products');
+      await expect(products).toBeVisible();
     });
 
     test('unified search input is present', async ({ page }) => {

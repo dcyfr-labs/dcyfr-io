@@ -170,7 +170,7 @@ export default async function HomePage() {
         </div>
 
         {/* Product sections */}
-        <main id="products" className="px-4 py-12 sm:px-6 lg:px-8">
+        <div id="products" className="px-4 py-12 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl space-y-14">
             {Object.entries(byTier).map(([tier, products]) => (
               <section key={tier} aria-labelledby={`section-${tier}`}>
@@ -194,7 +194,7 @@ export default async function HomePage() {
               </section>
             ))}
           </div>
-        </main>
+        </div>
 
         {/* Blog carousel — ISR from dcyfr.tech RSS */}
         <BlogCarousel items={blogItems} />

@@ -43,8 +43,11 @@ for (const route of ROUTES) {
       // rendered markup, not background telemetry beacons.
       await page.goto(route.path, { waitUntil: 'domcontentloaded' });
 
-      // Let hydration + font-swap + layout settle before snapshot
+      // Let hydration + layout settle before snapshot. The fixed wait is a
+      // floor, not the font gate: Geist is self-hosted through next/font/local
+      // and swaps in whenever the woff2 lands, so wait on the face itself.
       await page.waitForTimeout(1500);
+      await page.evaluate(() => document.fonts.ready);
 
       // Exclude the RSS-driven blog carousel from the capture. app/page.tsx
       // hydrates `section[aria-labelledby="blog-heading"]` (BlogCarousel) from
