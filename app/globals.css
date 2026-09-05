@@ -123,18 +123,19 @@
   --radius-sm: calc(var(--radius) - 4px);
 
   /*
-   * next/font loads Inter under --font-inter (see app/layout.tsx). Mapping it
-   * here keeps the `font-sans` utility meaning the site's body face. The
-   * engine binds <body> to --font-body independently, and the :root block
-   * below points that at the same face, so the utility and the element
+   * next/font loads Geist Sans under --font-geist-sans (see app/layout.tsx).
+   * Mapping it here keeps the `font-sans` utility meaning the site's body
+   * face. The engine binds <body> to --font-body independently, and the :root
+   * block below points that at the same face, so the utility and the element
    * binding cannot drift apart.
    *
-   * --font-mono is deliberately NOT mapped: the contract declares it as a raw
-   * variable in @layer base, which outranks v4's @layer theme default, so the
-   * `font-mono` utility already resolves to the theme's stack and agrees with
-   * the engine's code/kbd/samp/pre binding for free.
+   * --font-mono is deliberately NOT mapped, even though Geist Mono is now
+   * loaded: the contract declares it as a raw variable in @layer base, which
+   * outranks v4's @layer theme default, so the `font-mono` utility already
+   * resolves through the theme and agrees with the engine's code/kbd/samp/pre
+   * binding, which the --font-mono-loaded hook below fills.
    */
-  --font-sans: var(--font-inter);
+  --font-sans: var(--font-geist-sans);
 }
 
 /*
@@ -178,13 +179,16 @@
      * The engine binds body/headings/code to --font-body/-display/-mono, and
      * the theme defines each as var(--font-<role>-loaded, <system stack>). A
      * site supplies real faces by filling the -loaded hook; leaving one unset
-     * is how it opts into the system fallback. Display and body are both Inter
-     * here, matching what this site rendered before the migration. Mono is
-     * deliberately left unset — this site loads no mono face, so it takes the
-     * theme's ui-monospace stack.
+     * is how it opts into the system fallback.
+     *
+     * All three are filled now. Geist Sans carries display and body, Geist
+     * Mono carries code — the fleet-wide pairing that closes adoption
+     * Decision 4, which this site used to answer by leaving the mono hook
+     * unset and taking the theme's ui-monospace stack.
      */
-    --font-display-loaded: var(--font-inter);
-    --font-body-loaded: var(--font-inter);
+    --font-display-loaded: var(--font-geist-sans);
+    --font-body-loaded: var(--font-geist-sans);
+    --font-mono-loaded: var(--font-geist-mono);
 
     /*
      * Card hover microinteraction — scout finding 2026-07-19-dcyfr-io.

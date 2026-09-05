@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { GeistSans } from 'geist/font/sans';
+import { GeistMono } from 'geist/font/mono';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { ThemeProvider } from '@/components/chrome/theme-provider';
@@ -7,23 +8,6 @@ import { SiteHeader, type HeaderNavItem } from '@/components/chrome/site-header'
 import { SiteFooter, type FooterLink } from '@/components/chrome/site-footer';
 import type { ChromeNavSection } from '@/components/chrome/nav-utils';
 import './globals.css';
-
-const inter = Inter({
-  subsets: ['latin'],
-  // Named for the face, not the role. The theme engine binds <body> and
-  // headings to --font-body / --font-display, and the theme resolves each
-  // through a --font-<role>-loaded hook; globals.css points those hooks and
-  // the `font-sans` utility at this one variable. Naming it for the face means
-  // three roles can share it without any Tailwind theme key pointing at
-  // another, and swapping Inter out later is a one-line change here.
-  //
-  // (v4 also emits its own `--font-sans` default onto this same <html>, but
-  // inside `@layer theme`, and next/font injects this class unlayered —
-  // unlayered beats layered regardless of source order, so there is no
-  // clobber. Verified in the browser rather than reasoned about.)
-  variable: '--font-inter',
-  display: 'swap',
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://dcyfr.io'),
@@ -143,7 +127,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       lang="en"
       suppressHydrationWarning
       data-identity="slate"
-      className={`${inter.variable} theme-dcyfr-io`}
+      className={`${GeistSans.variable} ${GeistMono.variable} theme-dcyfr-io`}
     >
       <body className="flex min-h-dvh flex-col">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
