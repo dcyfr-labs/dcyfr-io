@@ -68,7 +68,7 @@ function OrganizationJsonLd() {
             email: 'hello@dcyfr.dev',
             contactType: 'customer support',
           },
-        }).replace(/</g, '\\u003c'),
+        }).replaceAll('<', String.raw`\u003c`),
       }}
     />
   );
