@@ -52,11 +52,11 @@ function OrganizationJsonLd() {
         __html: JSON.stringify({
           '@context': 'https://schema.org',
           '@type': 'Organization',
-          name: 'DCYFR',
+          name: 'DCYFR Labs',
           url: 'https://dcyfr.io',
           logo: 'https://dcyfr.io/logo.png',
           description:
-            'DCYFR builds AI-powered development frameworks, tools, and infrastructure for modern software teams.',
+            'DCYFR Labs builds AI-powered development frameworks, tools, and infrastructure for modern software teams.',
           sameAs: [
             'https://github.com/dcyfr',
             'https://dcyfr.app',
@@ -124,8 +124,8 @@ export default async function HomePage() {
               <span className="text-secure">AI-powered</span> development
             </h1>
             <p className="mb-8 text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-              DCYFR builds the frameworks, templates, agents, and infrastructure
-              you need to ship AI-powered applications faster.
+              DCYFR Labs builds the frameworks, templates, agents, and
+              infrastructure you need to ship AI-powered applications faster.
             </p>
 
             {/* Primary CTAs — @dcyfr-labs/dcyfr-button */}
