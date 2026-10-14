@@ -3,7 +3,7 @@
 ## Files
 
 - `smoke.spec.ts` — lightweight smoke coverage (existing).
-- `snapshots.spec.ts` — visual regression baseline per [`openspec/changes/dcyfr-skeleton-sites-scaffolding/spec.md#51-screenshot-baseline`](../../openspec/changes/dcyfr-skeleton-sites-scaffolding/spec.md) and [`docs/dcyfr-workspace/polish-loop.md`](../../docs/dcyfr-workspace/polish-loop.md).
+- `snapshots.spec.ts` — visual regression baseline, one PNG per route and viewport.
 - `snapshots/` — committed baseline PNGs (generated on first run — see below).
 
 ## One-time setup
@@ -57,5 +57,4 @@ When an intentional design change lands (e.g. Phase 4 primitive adoption):
 
 ## Related
 
-- [Polish loop architecture](../../docs/dcyfr-workspace/polish-loop.md) — how snapshots feed into scout trend observations + token-tweak PR proposals
-- [`nexus/scout-prompts/dcyfr-io.md`](../../nexus/scout-prompts/dcyfr-io.md) — scout context that reads these baselines for trend-drift detection
+These baselines also feed the maintainers' design polish loop (trend checks and design-token proposals), which runs from a private workspace and is not part of this repo.
