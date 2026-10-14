@@ -1,4 +1,4 @@
-<!-- TLP:AMBER -->
+<!-- TLP:CLEAR -->
 # dcyfr.io Deployment Runbook
 
 ## Overview
@@ -12,7 +12,7 @@
 | WAF       | Vercel Web Application Firewall (enable in project settings)        |
 | Analytics | Vercel Analytics + Speed Insights (enable in project settings)      |
 | Errors    | Sentry project: `dcyfr-io`                                          |
-| Repo      | `dcyfr/dcyfr-io`                                                    |
+| Repo      | `dcyfr-labs/dcyfr-io`                                                    |
 
 ## Branch → Environment Mapping
 
@@ -31,7 +31,7 @@ Set in **Project Settings → Environment Variables**:
 | ------------------------ | --------------------- | ------------------------------- |
 | `NEXT_PUBLIC_SENTRY_DSN` | All                   | Sentry DSN for `dcyfr-io`       |
 | `SENTRY_DSN`             | Production, Preview   | Server-side Sentry DSN          |
-| `SENTRY_ORG`             | Production            | Sentry org slug (`dcyfr`)       |
+| `SENTRY_ORG`             | Production            | Sentry org slug (`dcyfr-labs`, the default in `next.config.ts`)       |
 | `SENTRY_PROJECT`         | Production            | Sentry project (`dcyfr-io`)     |
 | `SENTRY_AUTH_TOKEN`      | Production            | Source map upload at build time |
 
