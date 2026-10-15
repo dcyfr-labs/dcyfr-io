@@ -68,7 +68,7 @@ This site follows the `dcyfr-site-scaffold` contract: colors, spacing, radii, an
 
 ## Deployment
 
-Deployed on Vercel from `main` (hardened headers via `vercel.json`). The operational runbook is [`DEPLOYMENT.md`](DEPLOYMENT.md) — note it is **TLP:AMBER**; treat its contents as limited-distribution.
+Deployed on Vercel from `main` (hardened headers via `vercel.json`). The operational runbook is [`DEPLOYMENT.md`](DEPLOYMENT.md). It is public (TLP:CLEAR).
 
 ## Further docs
 
