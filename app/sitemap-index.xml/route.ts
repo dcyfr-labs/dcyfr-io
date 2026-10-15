@@ -8,6 +8,7 @@ const TLD_SITEMAPS = [
   'https://dcyfr.bot/sitemap.xml',
   'https://dcyfr.build/sitemap.xml',
   'https://dcyfr.work/sitemap.xml',
+  'https://www.dcyfr.ai/sitemap.xml',
 ];
 
 export function GET() {
