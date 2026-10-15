@@ -18,8 +18,6 @@ npm install
 npm run dev        # http://localhost:3302
 ```
 
-> **Port collision:** dev port **3302** is also claimed by [dcyfr-tech](https://github.com/dcyfr-labs/dcyfr-tech) — you cannot run both dev servers simultaneously without overriding one (`npm run dev -- --port <other>`).
-
 | Command | What it does |
 |---|---|
 | `npm run dev` / `npm run start` | Dev / production server on port **3302** |
